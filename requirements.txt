@@ -1,0 +1,6 @@
+pandas~=2.2.3
+statsmodels~=0.14.4
+numpy~=1.24.4
+matplotlib~=3.10.0
+scikit-learn~=1.7.0
+neuralforecast~=3.0.1
