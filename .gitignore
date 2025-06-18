@@ -1,0 +1,64 @@
+# =========================================================
+# Arquivos de Ambiente e IDE (PyCharm)
+# =========================================================
+# Pasta de configurações do projeto do PyCharm. Essencial ignorar.
+.idea/
+
+# Arquivos de módulos do IntelliJ/PyCharm
+*.iml
+
+
+# =========================================================
+# Ambientes Virtuais (Virtualenv)
+# =========================================================
+# Pastas de ambientes virtuais do Python. Elas contêm as bibliotecas
+# instaladas e podem ser muito grandes.
+venv/
+env/
+.venv/
+.env/
+*/venv/
+*/env/
+
+
+# =========================================================
+# Arquivos e diretórios específicos do Python
+# =========================================================
+# Pasta de cache para arquivos compilados do Python
+__pycache__/
+
+# Arquivos Python compilados
+*.pyc
+*.pyo
+*.pyd
+
+# Arquivos de distribuição/pacotes
+build/
+dist/
+*.egg-info/
+
+
+# =========================================================
+# Notebooks e Checkpoints
+# =========================================================
+# Pasta de checkpoints gerada automaticamente pelo Jupyter/IPython
+.ipynb_checkpoints/
+
+
+# =========================================================
+# Arquivos de Sistema Operacional
+# =========================================================
+# Arquivos do macOS
+.DS_Store
+
+# Arquivos do Windows
+Thumbs.db
+desktop.ini
+
+
+# =========================================================
+# DIRETÓRIO ESPECÍFICO DO SEU PROJETO
+# =========================================================
+# Pasta onde seu script salva os datasets baixados.
+# É uma ótima prática não versionar os dados, apenas o código que os gera.
+/datasets/
