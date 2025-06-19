@@ -1,6 +1,21 @@
-pandas~=2.2.3
-statsmodels~=0.14.4
-numpy~=1.24.4
-matplotlib~=3.10.0
-scikit-learn~=1.7.0
-neuralforecast~=3.0.1
+# Arquivo de dependências para o projeto de modelos híbridos
+
+# Bibliotecas principais de Data Science
+pandas==2.2.2
+numpy==1.26.4
+matplotlib==3.8.4
+scikit-learn==1.5.0
+
+# Biblioteca para modelagem estatística
+statsmodels==0.14.2
+
+# Biblioteca para modelos de Deep Learning para Forecast
+neuralforecast==1.7.1
+torch==2.3.0
+
+# Utilitários
+tqdm==4.66.4
+
+# Ambiente de Notebook (opcional, mas recomendado)
+jupyterlab==4.2.1
+ipython==8.25.0
