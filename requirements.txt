@@ -1,21 +1,21 @@
-# Arquivo de dependências para o projeto de modelos híbridos
+# --- Bibliotecas Principais de Data Science ---
+pandas==2.1.4
+numpy==1.26.3
+scikit-learn==1.3.2
+matplotlib==3.8.2
 
-# Bibliotecas principais de Data Science
-pandas==2.2.2
-numpy==1.26.4
-matplotlib==3.8.4
-scikit-learn==1.5.0
+# --- Bibliotecas para Modelagem de Séries Temporais ---
+# Para o modelo ARIMA e datasets
+statsmodels==0.14.1
 
-# Biblioteca para modelagem estatística
-statsmodels==0.14.2
+# Para a busca automática de parâmetros do ARIMA (auto_arima)
+pmdarima==2.0.4
 
-# Biblioteca para modelos de Deep Learning para Forecast
-neuralforecast==1.7.1
-torch==2.3.0
+# Para os modelos de Deep Learning (N-BEATS, MLP, LSTM, Autoformer)
+neuralforecast==1.7.0
+torch==2.1.2
 
-# Utilitários
-tqdm==4.66.4
-
-# Ambiente de Notebook (opcional, mas recomendado)
-jupyterlab==4.2.1
-ipython==8.25.0
+# --- Utilitários e Ambiente de Notebook ---
+tqdm==4.66.1
+jupyterlab==4.0.10
+ipython==8.18.1
