@@ -62,6 +62,6 @@ desktop.ini
 # =========================================================
 # Pasta onde seu script salva os datasets baixados.
 # É uma ótima prática não versionar os dados, apenas o código que os gera.
-/datasets/
+/data/
 .vscode
 /lightning_logs/
