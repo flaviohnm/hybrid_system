@@ -1,11 +1,43 @@
-# utils.py - Módulo de Funções Auxiliares para o Pipeline de Séries Temporais
-
 import os
 import pandas as pd
 import numpy as np
 import random
 from statsmodels.datasets import get_rdataset
 from sklearn.metrics import mean_squared_error
+
+# ==============================================================================
+# DICIONÁRIO CENTRAL DE HIPERPARÂMETROS
+# Baseado em configurações de alta performance da literatura de referência.
+# ==============================================================================
+HIPERPARAMETROS = {
+    'MLP': {
+        'hidden_size': 100,
+        'max_steps': 1000,
+        'learning_rate': 0.001
+    },
+    'LSTM': {
+        'hidden_size': 100,
+        'max_steps': 500,
+        'learning_rate': 0.001
+    },
+    'GRU': {
+        'hidden_size': 100,
+        'max_steps': 500,
+        'learning_rate': 0.001
+    },
+    'N-BEATS': {
+        'num_blocks': [2],
+        'mlp_units': [[128, 128]],
+        'max_steps': 100,
+        'learning_rate': 0.001
+    },
+    'NHITS': {
+        'num_blocks': [3],
+        'mlp_units': [[128, 128]],
+        'max_steps': 100,
+        'learning_rate': 0.001
+    }
+}
 
 # =========================================================
 # FUNÇÕES DE SETUP E PROCESSAMENTO DE DADOS
@@ -29,8 +61,9 @@ def carregar_serie(nome, pasta_cache="./data/bronze"):
 
     if os.path.exists(caminho_arquivo):
         # print(f"Carregando dataset '{nome}' do cache local: {caminho_arquivo}")
-        df = pd.read_csv(caminho_arquivo, parse_dates=[
-                         'date'], index_col='date')
+        df = pd.read_csv(caminho_arquivo,
+                         parse_dates=['date'],
+                         index_col='date')
         df['value'].name = nome
         return df['value']
 
@@ -40,46 +73,96 @@ def carregar_serie(nome, pasta_cache="./data/bronze"):
     serie = None
     if nome_base == "airpassengers":
         dados = get_rdataset("AirPassengers", package="datasets").data
-        serie = pd.Series(dados['value'].values, index=pd.date_range(
-            start="1949-01-01", periods=len(dados), freq="MS"), name=nome)
+        serie = pd.Series(dados['value'].values,
+                          index=pd.date_range(start="1949-01-01",
+                                              periods=len(dados),
+                                              freq="MS"),
+                          name=nome)
     elif nome_base == "lynx":
         dados = get_rdataset("lynx", package="datasets").data
-        serie = pd.Series(dados['value'].values, index=pd.date_range(
-            start="1821", periods=len(dados), freq="YE-DEC"), name=nome)
+        serie = pd.Series(dados['value'].values,
+                          index=pd.date_range(start="1821",
+                                              periods=len(dados),
+                                              freq="YE-DEC"),
+                          name=nome)
     elif nome_base == "co2":
         dados = get_rdataset("CO2", package="datasets").data
         dados = dados.ffill()
-        serie = pd.Series(dados['value'].values, index=pd.date_range(
-            start="1958-03-29", periods=len(dados), freq="MS"), name=nome)
+        serie = pd.Series(dados['value'].values,
+                          index=pd.date_range(start="1958-03-29",
+                                              periods=len(dados),
+                                              freq="MS"),
+                          name=nome)
     elif nome_base == "austres":
         dados = get_rdataset("austres", package="datasets").data
-        serie = pd.Series(dados['value'].values, index=pd.date_range(
-            start="1971-03-01", periods=len(dados), freq="QS-MAR"), name=nome)
+        serie = pd.Series(dados['value'].values,
+                          index=pd.date_range(start="1971-03-01",
+                                              periods=len(dados),
+                                              freq="QS-MAR"),
+                          name=nome)
     elif nome_base == "nottem":
         dados = get_rdataset("nottem", package="datasets").data
-        serie = pd.Series(dados['value'].values, index=pd.date_range(
-            start="1920-01-01", periods=len(dados), freq="MS"), name=nome)
+        serie = pd.Series(dados['value'].values,
+                          index=pd.date_range(start="1920-01-01",
+                                              periods=len(dados),
+                                              freq="MS"),
+                          name=nome)
     elif nome_base == "johnsonjohnson":
         dados = get_rdataset("JohnsonJohnson", package="datasets").data
-        serie = pd.Series(dados['value'].values, index=pd.date_range(
-            start="1960-01-01", periods=len(dados), freq="QS-JAN"), name=nome)
+        serie = pd.Series(dados['value'].values,
+                          index=pd.date_range(start="1960-01-01",
+                                              periods=len(dados),
+                                              freq="QS-JAN"),
+                          name=nome)
     elif nome_base == "ukgas":
         dados = get_rdataset("UKgas", package="datasets").data
         # A série é trimestral, de 1960 Q1 a 1986 Q4
-        serie = pd.Series(dados['value'].values, index=pd.date_range(start="1960-01-01", periods=len(dados), freq="QS-JAN"), name=nome)        
+        serie = pd.Series(dados['value'].values,
+                          index=pd.date_range(start="1960-01-01",
+                                              periods=len(dados),
+                                              freq="QS-JAN"),
+                          name=nome)
+    elif nome_base == "sunspots":
+        dados = get_rdataset("sunspots", package="datasets").data
+        # Série anual de 1700 a 1988 (o dataset em R vai até 1988)
+        serie = pd.Series(dados['value'].values,
+                          index=pd.date_range(start="1700",
+                                              periods=len(dados),
+                                              freq="A-DEC"),
+                          name=nome)
+
+    elif nome_base == "nile":
+        dados = get_rdataset("Nile", package="datasets").data
+        # Série anual do fluxo do Rio Nilo de 1871 a 1970
+        serie = pd.Series(dados['value'].values,
+                          index=pd.date_range(start="1871",
+                                              periods=len(dados),
+                                              freq="A-DEC"),
+                          name=nome)
+
+    elif nome_base == "ukdriverdeaths":
+        dados = get_rdataset("UKDriverDeaths", package="datasets").data
+        # Série mensal de mortes de motoristas no Reino Unido
+        serie = pd.Series(dados['value'].values,
+                          index=pd.date_range(start="1969-01-01",
+                                              periods=len(dados),
+                                              freq="MS"),
+                          name=nome)
     else:
         raise ValueError(
             f"Lógica de download para a série '{nome}' não implementada.")
 
     if serie is not None:
         print(
-            f"-> Salvando cópia do dataset '{nome}' em cache: {caminho_arquivo}")
-        df_para_salvar = pd.DataFrame(
-            {"date": serie.index, "value": serie.values})
+            f"-> Salvando cópia do dataset '{nome}' em cache: {caminho_arquivo}"
+        )
+        df_para_salvar = pd.DataFrame({
+            "date": serie.index,
+            "value": serie.values
+        })
         df_para_salvar.to_csv(caminho_arquivo, index=False)
 
     return serie
-
 
 def dividir_serie_temporal(serie, percentual_treino=0.85):
     """Divide a série em conjuntos de treino e teste."""
@@ -97,11 +180,10 @@ def preparar_dados_para_neuralforecast(serie, nome_serie):
     df['unique_id'] = nome_serie
     return df
 
+
 # =========================================================
 # FUNÇÃO DE CÁLCULO DE MÉTRICAS
 # =========================================================
-
-
 def calcular_metricas(y_true, y_pred, y_train):
     """Calcula um dicionário de métricas de avaliação: RMSE, MAPE e MASE."""
     # Garante que os inputs sejam arrays numpy para os cálculos
